@@ -1,15 +1,30 @@
 const express = require('express')
 const app = express()
-const climber = require('./climber')
-climber.load()
+const { climberList, climber } = require('./climber')
+climberList.load()
+console.log(climberList.isLoaded)
 require('colors')
 
+const messages = {
+	load: {
+		greet: "A climber's journey upward",
+		start: "You are ready to start your adventure",
+		profileErr: "Failed to load profiles"
+	}
+}
+
+// Load up
 app.get('/', (req, res) => {
-	res.send("A Climber's journey upward")
+	let mess = [messages.load.greet]
+	console.log(climberList.isLoaded)
+	mess.push(climberList.isLoaded
+		? messages.load.start
+		: messages.load.profileErr)
+	res.send(mess)
 })
 
 // // JSON Parser
-// app.use(express.json())
+app.use(express.json())
 
 
 // api
