@@ -1,13 +1,13 @@
 const fs = require('fs')
 
-const get = (filePath) => {
-	let data = null
+const getData = (filePath) => {
+	let data = []
 	try {
-		data = fs.readFileSync(filePath, 'utf8', '[]')
+		data = JSON.parse(fs.readFileSync(filePath, 'utf8'))
 	} catch (err) {
-		return data
+		return []
 	}
-	return JSON.parse(data)
+	return data
 }
 
 const create = (filePath) => {
@@ -35,15 +35,14 @@ const exists = (filePath, cb) => {
  * Read or create file. 
  * Second argument optional to prevent creating a new is it doesn't exists
  * @param {File} filePath 
- * @param {boolean} createNew default=false
- * @returns {JSON} 
+ * @returns {Object} 
  */
 const read = (filePath, createNew = false) => {
 	const isFileExist = createNew
 		? exists(filePath, create)
 		: exists(filePath)
 	if (isFileExist) {
-		return get(filePath)
+		return getData(filePath)
 	}
 	return isFileExist
 
