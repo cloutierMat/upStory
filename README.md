@@ -1,5 +1,6 @@
 # upStory
 upStory is a text based game api built
+In async
 
 ## Requirements
 - node
