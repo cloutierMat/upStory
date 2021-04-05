@@ -11,7 +11,6 @@ const loadSaves = () => {
 
 const init = () => {
 	climberList.list = loadSaves()
-	console.log(climberList.list)
 	if (climberList.list) {
 		climberList.isLoaded = true
 	}

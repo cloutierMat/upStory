@@ -27,8 +27,6 @@ app.get('/', (req, res) => {
 //
 // load and display available profiles
 app.get('/login', (req, res) => {
-
-
 	const mess = climberList.displayShort()
 	mess.length && mess.push('choose')
 	mess.push("create")

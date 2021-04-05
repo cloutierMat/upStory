@@ -33,9 +33,10 @@ const exists = (filePath, cb) => {
 
 /**
  * Read or create file. 
- * Second argument optional to prevent creating a new is it doesn't exists
+ * Second argument optional to enable creating a new if it doesn't exists
  * @param {File} filePath 
- * @returns {Object} 
+ * @param {boolean} createNew default=false
+ * @returns {Object} false if couln't read
  */
 const read = (filePath, createNew = false) => {
 	const isFileExist = createNew

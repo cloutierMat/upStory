@@ -1,5 +1,5 @@
 // decide if I print as object or as text...
-const outputAsText = true
+const outputAsText = false
 
 // let's record the last sent message. it might come in handy...
 let lastMessage
