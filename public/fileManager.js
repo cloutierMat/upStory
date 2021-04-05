@@ -1,4 +1,5 @@
-const fs = require('fs')
+const fs = require('fs').promises
+const path = require('path')
 
 const getData = (filePath) => {
 	let data = []
@@ -31,6 +32,10 @@ const exists = (filePath, cb) => {
 	return true
 }
 
+const readDirectory = (path) => fs.readdir(path)
+
+const getjson = (arr) => arr.filter(el => path.extname(el) === '.json').map(el => el.replace(/\.[^/.]+$/, ""))
+
 /**
  * Read or create file. 
  * Second argument optional to enable creating a new if it doesn't exists
@@ -51,5 +56,7 @@ const read = (filePath, createNew = false) => {
 
 
 module.exports = {
-	read
+	read,
+	readDirectory,
+	getjson
 }

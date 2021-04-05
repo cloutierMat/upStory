@@ -1,13 +1,16 @@
 const express = require('express')
 const app = express()
+const fileManager = require('./public/fileManager')
 const { climberList, climber } = require('./public/climber')
+const { message } = require("./public/message")
 require('colors')
-const { message } = require("./public/messages")
+
+const saveFilePath = './save'
 
 //initiate processes
 const port = process.env.PORT || 3000
 message.init(port)
-climberList.init()
+
 
 // // JSON Parser
 app.use(express.json())
@@ -19,7 +22,6 @@ app.use(express.json())
 // Greeting page
 app.get('/', (req, res) => {
 	const mess = ["greet"]
-	mess.push(climberList.isLoaded ? "start" : "profileErr")
 	res.send(message.create(mess))
 })
 
@@ -27,10 +29,15 @@ app.get('/', (req, res) => {
 //
 // load and display available profiles
 app.get('/login', (req, res) => {
-	const mess = climberList.displayShort()
-	mess.length && mess.push('choose')
-	mess.push("create")
-	res.send(message.create(mess))
+	(async () => {
+		try {
+			const userList = await fileManager.readDirectory(saveFilePath)
+			const mess = fileManager.getjson(userList)
+			res.send(message.userList(mess))
+		} catch (err) {
+			res.status(404).send(message.create(["err404"]))
+		}
+	})()
 })
 
 // receives a username
