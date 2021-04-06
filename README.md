@@ -3,6 +3,8 @@ upStory is a text based game api built
 
 ## Requirements
 - node
+- colors
+- express
 - nodemon (to run in live environement)
 
 ## Running locally
