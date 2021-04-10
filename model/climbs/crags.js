@@ -1,6 +1,6 @@
 const climbs = require('./climbs')
 
-climbs.createAreas("acephale",
+climbs.createCrags("acephale",
 	{
 		text: `One of Bow Valley's hardest crag.
 		"Recommended for intermediate to expert"`,

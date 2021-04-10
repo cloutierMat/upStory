@@ -1,61 +1,46 @@
-const messages = {}
+const db = require('./db')
+require('colors')
 
-// create Messages
-const createMess = (name, text, link) => {
-	messages[name] = {
-		text: text,
-		link, link
+const messCollection = "messages"
+
+const createMessage = async (name, description, options) => {
+	if (!options) options = []
+	try {
+		const collection = await db.getCollection(messCollection)
+		const result = await collection.insertOne({
+			name,
+			description,
+			options,
+		})
+		console.log("model/messages.js createMessage Succesfully added new message to database".green)
+		console.log(result.ops)
+	} catch (error) {
+		console.log("model/messages.js createMessage Error adding new message to database".red.bgCyan)
+		console.log(`${error}`.red)
 	}
 }
 
-createMess("greet",
-	`Welcome to UpStory.
-		"==>Careful, falling hazard!!"
-		"To begin and progres your story, follow the rest"`,
-	"get /climber/login")
-
-createMess("noCurrentClimbers",
-	`No current climbers exists for that account.
-			"You should think about creating one"
-			"No, really, you can"t keep going without it!"`)
-
-createMess("foundClimbers",
-	`Ain"t that amazing. It appears you are not the only climber on the planet
-			"If you recognize yourself in one of those, by all means, login"`)
-
-createMess("create",
-	`To create a new climber, follow this rest`,
-	"post /climber/login  {name:{Your_Name}}")
-
-createMess("introduce",
-	`Let me introduce you to yourself
-			"When you are done admiring your own self protrait, follow the rest to get to your climber"s van"
-			"==> Remember where it is. You can always come back to it when you need a rest"`,
-	`get /van {climber:{id}}`)
-
-createMess("van",
-	`Here is your van all the options start from here`)
-
-createMess("error",
-	"You screwed up big time!")
-
-const listClimber = (climber) => {
-	climber.rest = `get /login/${climber.id}`
-	console.log(climber)
-	return
-}
-
-const getMessage = (arr) => {
-	const mess = {}
-	arr = [...arr]
-	for (element of arr) {
-		mess[element] = messages[element]
-		console.log(messages[element])
+const getMessage = async (messArr) => {
+	messages = {}
+	try {
+		for (message of messArr) {
+			const collection = await db.getCollection(messCollection)
+			const result = await collection.findOne({ name: message })
+			messages[result.name] = {
+				description: result.description,
+				options: result.options
+			}
+			console.log("model/messages.js getMessage Succesfully loaded a message from database".green)
+			console.log(result)
+		}
+	} catch (error) {
+		console.log("model/messages.js getMessage Error loading a message from database".red.bgCyan)
+		console.log(`${error}`.red)
 	}
-	return mess
+	return messages
 }
 
 module.exports = {
-	getMessage,
-	listClimber,
+	createMessage,
+	getMessage
 }

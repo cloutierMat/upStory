@@ -1,43 +1,75 @@
-const _climber = {}
-const _list = []
+const { isNumber } = require("lodash")
+const db = require("./db")
+const climberCollection = "climbers"
 
-class Climber {
-	constructor(name) {
-		this.name = name
-		this.id = id
-		this.grade = 8
-		this.status = 'happy'
-		this.ascents = []
-		this.attempts = []
-		climberList.all.push(id)
-		return this.id
+const invalidRequest = (name) => {
+	console.log(`model/climbers Invalid request --- name:${name} ---`.red.bgCyan)
+	return 400
+}
+
+const newClimber = (name) => {
+	return {
+		name: name,
+		grade: 8,
+		status: "happy",
+		ascents: [],
+		attempts: []
 	}
 }
 
-const create = (name) => {
-	const id = climberList.all.length + 1
-	return _climber[id] = new Climber(name, id)
+const createClimber = async (name) => {
+	try {
+		const collection = await db.getCollection(climberCollection) // get collection
+		let result = await db.findOneByName(collection, name) // find if name exist in collection
+		if (result !== null) return invalidRequest(name) // return Invalid request if name isn't unique
+		result = await db.insertOne(collection, newClimber(name)) // create new entry in the database
+		console.log("model/climbers.js createClimber Succesfully added new climber to database".green)
+		console.log(result.ops)
+		return result.ops
+	} catch (error) {
+		console.log("model/climbers.js createClimber Failed to create a new climber".red.bgCyan)
+		console.log(`${error}`.red)
+		return 500
+	}
 }
 
+const getDetails = async (name) => {
+	try {
+		const collection = await db.getCollection(climberCollection)
+		let result = await db.findOne(collection, { name: name })
+		if (result === null) return invalidRequest(name)
+		console.log("model/climbers.js getDetails Succesfully loaded climber from database".green)
+		console.log(result)
+		return result
+	} catch (error) {
+		console.log("model/climbers.js getDetails Failed to load climber from database".red.bgCyan)
+		console.log(`${error}`.red)
+		return 500
+	}
+}
 
-const getDetails = (id) => { id: _climber[id] }
-
-const getShort = (id) => (({ name, id, grade, status }) => ({ name, id, grade, status }))(_climber[id])
+const getShort = async (name) => {
+	try {
+		const climber = await getDetails(name)
+		if (isNumber(climber)) return climber
+		return {
+			name: climber.name,
+			grade: climber.grade,
+			status: climber.status
+		}
+	} catch (error) {
+		console.log("model/climbers.js getShorts Failed to load climber from database".red.bgCyan)
+		console.log(`${error}`.red)
+		return 500
+	}
+}
 
 const climbers = {
-	create: create,
+	createClimber,
 	getDetails,
-	getShort
-
-}
-const climberList = {
-	get: () => this.all,
-	add: (id) => _list.push(id)
-}
-module.exports = {
-	climbers,
-	climberList
+	getShort,
 }
 
-add("mat")
-console.log(_climber)
+module.exports = climbers
+
+createClimber("mat")

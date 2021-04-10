@@ -4,24 +4,26 @@ const validate = require('./validate')
 const messages = require('../model/messages')
 const { climbers, climberList } = require('../model/climbers')
 
+const assign = (obj1, obj2) => Object.assign(obj1, obj2)
+
 //
 // greeting screen
-router.get('/', (req, res) => {
-	let mess = messages.getMessage(["greet"])
+router.get('/', async (req, res) => {
+	let mess = await messages.getMessage(["greet"])
 	res.send(mess)
 })
 
 //
 // display available climbers
-router.get('/login', (req, res) => {
-	let mess = {}
-	if (climberList.all.length) {
-		mess = messages.getMessage(["foundClimbers"])
-		climberList.all.forEach(el => mess = Object.assign(mess, messages.listClimber(climbers.getShort(el))))
+router.get('/login', async (req, res) => {
+	let mess = await messages.getMessage(["create"])
+	const list = climberList.get()
+	if (list.length) {
+		mess = assign(mess, await messages.getMessage(["foundClimbers"]))
+		// list.forEach(el => mess = assign(mess, messages.listClimber(climbers.getShort(el))))
 	}
-	else mess = messages.getMessage(["noCurrentClimbers"])
+	else mess = await messages.getMessage(["noCurrentClimbers"])
 
-	mess = Object.assign(mess, messages.getMessage(["create"]))
 	res.send(mess)
 })
 
@@ -33,18 +35,17 @@ router.post('/login', (req, res) => {
 		res.status(400).send(error)
 		return
 	}
-	const id = climbers.new(req.body.name)
-	let mess = {
-		messages: messages.getMessage(['success', 'introduce'], { climber: id }),
-		climbers: climbers.getDetails(id)
-	}
+	const id = climbers.create(req.body.name)
+	let mess = { messages: messages.getMessage(['success', 'introduce']) }
+	mess = assign(mess, messages.listClimber(climbers.getShort(id)))
+
 	res.send(mess)
 })
 
 //
 // login into an existing account
-router.get('/login/:id', (req, res) => {
-	const error = validate.validateId(req.params, climberList.all)
+router.get('/login/:name', (req, res) => {
+	const error = validate.validateId(req.params, climberList.get())
 	if (error) {
 		res.status(400).send(error)
 		return
