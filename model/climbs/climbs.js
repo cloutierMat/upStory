@@ -1,4 +1,6 @@
-const db = require('./')
+const db = require('../db')
+
+const crags = {}
 const createCrags = (name, description) => {
 	const text = description.text
 	const approach = description.approach

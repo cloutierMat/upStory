@@ -19,8 +19,8 @@ function close() {
 	})
 }
 
-const findOneByName = (collection, name) => {
-	return collection.findOne({ name: name })
+const findOneByObj = (collection, obj) => {
+	return collection.findOne(obj)
 }
 
 const insertOne = (collection, obj) => {
@@ -31,6 +31,6 @@ module.exports = {
 	getDb,
 	getCollection,
 	close,
-	findOneByName,
+	findOneByObj,
 	insertOne
 }

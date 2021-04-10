@@ -30,14 +30,14 @@ const getMessage = async (messArr) => {
 				description: result.description,
 				options: result.options
 			}
-			console.log("model/messages.js getMessage Succesfully loaded a message from database".green)
+			console.log(`model/messages.js getMessage Succesfully loaded '${message}' from database`.green)
 			console.log(result)
 		}
+		return messages
 	} catch (error) {
 		console.log("model/messages.js getMessage Error loading a message from database".red.bgCyan)
 		console.log(`${error}`.red)
 	}
-	return messages
 }
 
 module.exports = {

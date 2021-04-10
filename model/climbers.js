@@ -20,7 +20,7 @@ const newClimber = (name) => {
 const createClimber = async (name) => {
 	try {
 		const collection = await db.getCollection(climberCollection) // get collection
-		let result = await db.findOneByName(collection, name) // find if name exist in collection
+		let result = await db.findOneByObj(collection, { name: name }) // find if name exist in collection
 		if (result !== null) return invalidRequest(name) // return Invalid request if name isn't unique
 		result = await db.insertOne(collection, newClimber(name)) // create new entry in the database
 		console.log("model/climbers.js createClimber Succesfully added new climber to database".green)
@@ -36,7 +36,7 @@ const createClimber = async (name) => {
 const getDetails = async (name) => {
 	try {
 		const collection = await db.getCollection(climberCollection)
-		let result = await db.findOne(collection, { name: name })
+		let result = await db.findOneByObj(collection, { name: name })
 		if (result === null) return invalidRequest(name)
 		console.log("model/climbers.js getDetails Succesfully loaded climber from database".green)
 		console.log(result)
@@ -72,4 +72,5 @@ const climbers = {
 
 module.exports = climbers
 
-createClimber("mat")
+// createClimber("mat")
+
