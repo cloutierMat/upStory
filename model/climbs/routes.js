@@ -1,14 +1,10 @@
 const climbs = require('./climbs')
 
-climbs.createRoutes('acephale',
-	{
-
-		description: {
-			name: "Bunda De Fora",
-			grade: 14,
-			description: "Fisrt climbed by Lev Pinter"
-		}
-	}
+climbs.createRoutes('acephale', {
+	name: "Bunda De Fora",
+	grade: 14,
+	description: "Fisrt climbed by Lev Pinter"
+}
 )
 // {
 // 	name: "First Flight",

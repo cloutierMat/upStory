@@ -10,12 +10,16 @@ router.get('/', (req, res) => {
 	res.send(mess)
 })
 
+//
+// get the list of crags
 router.get('/:crag', (req, res) => {
 	const crag = req.params.crag
 	let mess = climb.getCrag(crag)
 	res.send(mess)
 })
 
+//
+// get route list for the crag
 router.get('/:crag/:route', (req, res) => {
 	const crag = req.params.crag
 	const route = req.params.route
@@ -23,6 +27,9 @@ router.get('/:crag/:route', (req, res) => {
 	res.send(mess)
 })
 
+//
+// attempt to climb a route
+// update database with new attempts/ascent
 router.put('/:area/:route', (req, res) => {
 
 	res.send({ area: req.params.area, route: req.params.route, body: req.body })

@@ -4,8 +4,6 @@ const validate = require('./validate')
 const messages = require('../model/messages')
 const climbers = require('../model/climbers')
 
-const assign = (obj1, obj2) => Object.assign(obj1, obj2)
-
 //
 // greeting screen
 router.get('/', async (req, res) => {
