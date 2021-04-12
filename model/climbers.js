@@ -13,8 +13,6 @@ const newClimber = (name) => {
 		name: name,
 		grade: 8,
 		status: "happy",
-		ascents: [],
-		attempts: []
 	}
 }
 
@@ -65,10 +63,23 @@ const getShort = async (name) => {
 	}
 }
 
+const getId = async (name) => {
+	try {
+		const climber = await getDetails(name)
+		if (Number.isNaN(climber)) return climber
+		return climber._id
+	} catch (error) {
+		console.log("model/climbers.js getId Failed to load climber from database".red.bgCyan)
+		console.log(`${error}`.red)
+		return 500
+	}
+}
+
 const climbers = {
 	createClimber,
 	getDetails,
 	getShort,
+	getId
 }
 
 module.exports = climbers
@@ -79,4 +90,4 @@ async function testFunction() {
 	console.log(await getShort('mat')
 	)
 }
-testFunction()
+// testFunction()

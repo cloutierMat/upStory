@@ -13,7 +13,7 @@ const createMessage = async (name, description, options) => {
 			options,
 		})
 		console.log("model/messages.js createMessage Succesfully added new message to database".green)
-		console.log(result.ops)
+		console.log(result.ops[0]._id)
 	} catch (error) {
 		console.log("model/messages.js createMessage Error adding new message to database".red.bgCyan)
 		console.log(`${error}`.red)
@@ -31,7 +31,7 @@ const getMessage = async (messArr) => {
 				options: result.options
 			}
 			console.log(`model/messages.js getMessage Succesfully loaded '${message}' from database`.green)
-			console.log(result)
+			console.log(result._id)
 		}
 		return messages
 	} catch (error) {

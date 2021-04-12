@@ -26,10 +26,8 @@ router.post('/login', async (req, res) => {
 		res.status(400).send(error)
 		return
 	}
-	console.time()
 	const climber = await climbers.createClimber(req.body.name)
 	let mess = { messages: await messages.getMessage(['introduce']), climber }
-	console.timeEnd()
 	res.send(mess)
 })
 

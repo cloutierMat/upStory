@@ -1,4 +1,5 @@
-const db = require('../db')
+const { emit } = require('nodemon')
+const db = require('./db')
 require('colors')
 
 const cragsCollection = "crags"
@@ -70,22 +71,60 @@ const createRoutes = async (crag, route) => {
 	}
 }
 
-const getCrag = (crag) => crags[crag]
+const getAllCrags = async () => {
+	try {
+		const collection = await db.getCollection(cragsCollection)
 
-const getRoute = (crag, route) => {
-	return { [route]: crags[crag][route] }
+		const result = await collection.distinct("name")
+		console.log(`model/climbs.js getAllCrags Succesfully fetched all crags`.green)
+		return result
+	} catch (error) {
+		console.log(`model/climbs.js getAllCrags Error fetching all crags from the database`.red.bgGray)
+		console.log(`${error}`.red)
+		return 500
+	}
+}
+const getAllRoutes = async (crag) => {
+	try {
+		const crags = await db.getCollection(cragsCollection)
+		const cragId = (await crags.findOne({ name: crag }, { projection: { _id: 1 } }))._id
+		console.log(cragId)
+		const routes = await db.getCollection(routesCollection)
+		const cursor = await routes.find({ forCrags: cragId }, { projection: { name: 1, grade: 1, _id: 0 } }).toArray()
+		// const result = await cursor.toArray()
+		console.log(`model/climbs.js getAllRoutes Succesfully fetched all routes from ${crag}`.green)
+		return cursor
+	} catch (error) {
+		console.log(`model/climbs.js getAllRoutes Error fetching all routes from the database`.red.bgGray)
+		console.log(`${error}`.red)
+		return 500
+	}
+}
+
+const getRouteId = async (name) => {
+	try {
+		const routes = await db.getCollection(routesCollection)
+		return (await routes.findOne({ name }, { projection: { _id: 1 } }))._id
+	} catch (error) {
+		console.log(`model/climbs.js getId Error fetching route id from the database`.red.bgGray)
+		console.log(`${error}`.red)
+		return 500
+	}
 }
 
 module.exports = {
-	getCrag,
-	getRoute,
+	getAllCrags,
+	getAllRoutes,
 	createCrags,
-	createRoutes
+	createRoutes,
+	getRouteId
 }
 
 async function testFunction() {
-	console.log(await createCrags("acephale", { text: "acephale", approach: "not all that bad" }))
-	console.log(await createRoutes("acephale", { name: "bunda", grade: "14", description: "This is the bunda descriptors" }))
+	// console.log(await createCrags("acephale", { text: "acephale", approach: "not all that bad" }))
+	// console.log(await createRoutes("acephale", { name: "bunda", grade: "14", description: "This is the bunda descriptors" }))
+	// console.log(await getAllCrags())
+	console.log(await getAllRoutes("acephale"))
 	db.close()
 }
 // testFunction()
