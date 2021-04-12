@@ -1,18 +1,36 @@
-function postMessage() {
-	let message = { name: "rat" }
+const loadText = (dataObj) => {
+	console.log("loading text at greeting page")
 
-	let postOptions = {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(message)
-	}
+	const div = document.createElement('div')
 
-	fetch('a/', postOptions)
-		.then((response) => { console.log(response) })
-		.then(() => console.log('here'))
+	const strDiv = document.createElement('div')
+	strDiv.textContent = dataObj.description
+
+	const strButton = document.createElement('button')
+	strButton.textContent = 'Login'
+
+	const buttonAnchor = document.createElement('a')
+	buttonAnchor.setAttribute('href', 'climber/login.html')
+	buttonAnchor.appendChild(strButton)
+
+	div.appendChild(strDiv)
+	div.appendChild(buttonAnchor)
+	return div
 }
 
+const loadGreetingPage = (pageDataArray) => {
+	const textDiv = document.getElementById('textDiv')
 
-addEventListener("keypress", postMessage)
+	for (pageData in pageDataArray) {
+		dataObj = pageDataArray[pageData]
+		console.log(dataObj)
+		const text = loadText(dataObj)
+		textDiv.appendChild(text)
+	}
+}
+
+fetch('api/climber')
+	.then((response) => response.json())
+	.then((pageData) => {
+		loadGreetingPage(pageData)
+	})

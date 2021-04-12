@@ -16,16 +16,18 @@ app.use(express.urlencoded({
 //
 // api
 const climber = require('./routes/climber')
-app.use('/climber', climber)
+app.use('/api/climber', climber)
 const climb = require('./routes/climb')
-app.use('/climb', climb)
+app.use('/api/climb', climb)
 const van = require('./routes/van')
-app.use('/van', van)
+app.use('/api/van', van)
 // Greeting page
 app.get('/', (req, res) => {
-	res.redirect('/climber')
+	res.redirect('/index.html')
 })
 
+
+app.use(express.static('public'))
 // PORT
 app.listen(port, () => {
 	console.log(`Server listening at`, `http://localhost:${port}`.cyan)
