@@ -6,14 +6,21 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>upStory</title>
-	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 	<h1>UpStory</h1>
-	<div id="textDiv"></div>
+	<div class="container">
+		<div class="column" id="textDiv"></div>
+		<div class="column" id="p5-window"></div>
+	</div>
+	</div>
 </body>
 
-<script src="index.js"></script>
+<script type="module" src="./javascript/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.3.1/lib/p5.min.js"></script>
+<script src="./javascript/sketch.js"></script>
+</head>
 
 </html>

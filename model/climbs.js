@@ -1,4 +1,3 @@
-const { emit } = require('nodemon')
 const db = require('./db')
 require('colors')
 
@@ -15,7 +14,7 @@ const notUnique = (name) => {
 const createCrags = async (name, description) => {
 	const text = description.text
 	const approach = description.approach
-	const rest = `climb/:${name}`
+	const link = `climb/:${name}`
 	try {
 		const collection = await db.getCollection(cragsCollection)
 		const isCragExist = await db.findOneByObj(collection, { name })
@@ -24,7 +23,7 @@ const createCrags = async (name, description) => {
 			name,
 			text,
 			approach,
-			rest
+			link
 		})
 		console.log("model/climbs.js createCrags Succesfully added new crag to database".green)
 		console.log(result.ops)
@@ -42,7 +41,7 @@ const createRoutes = async (crag, route) => {
 	const name = route.name
 	const grade = route.grade
 	const description = route.description
-	const path = `climb/${crag}/${name}`
+	const link = `climb/${crag}/${name}`
 
 	try {
 		const crags = await db.getCollection(cragsCollection)
@@ -60,7 +59,7 @@ const createRoutes = async (crag, route) => {
 			name,
 			grade,
 			description,
-			path
+			link
 		})
 		console.log(`model/climbs.js createRoutes Succesfully added route:'${name}' to crag:'${crag}'`.green)
 		return result.ops[0]
@@ -74,8 +73,8 @@ const createRoutes = async (crag, route) => {
 const getAllCrags = async () => {
 	try {
 		const collection = await db.getCollection(cragsCollection)
-
-		const result = await collection.distinct("name")
+		const cursor = collection.find({}, { projection: { name: 1, link: 1, _id: 0 } })
+		const result = await cursor.toArray()
 		console.log(`model/climbs.js getAllCrags Succesfully fetched all crags`.green)
 		return result
 	} catch (error) {
@@ -119,12 +118,3 @@ module.exports = {
 	createRoutes,
 	getRouteId
 }
-
-async function testFunction() {
-	// console.log(await createCrags("acephale", { text: "acephale", approach: "not all that bad" }))
-	// console.log(await createRoutes("acephale", { name: "bunda", grade: "14", description: "This is the bunda descriptors" }))
-	// console.log(await getAllCrags())
-	console.log(await getAllRoutes("acephale"))
-	db.close()
-}
-// testFunction()

@@ -27,7 +27,7 @@ router.get('/:crag', async (req, res) => {
 router.post('/:crag/:route', async (req, res) => {
 	const route = req.params.route
 
-	const climber = req.body.name
+	const climber = req.body.climber
 
 	let mess = await attempts.logAttempts(climber, route)
 	res.send(mess)

@@ -3,17 +3,15 @@ require('colors')
 
 const messCollection = "messages"
 
-const createMessage = async (name, description, options) => {
-	if (!options) options = []
+const createMessage = async (name, description, link = null) => {
 	try {
 		const collection = await db.getCollection(messCollection)
 		const result = await collection.insertOne({
 			name,
 			description,
-			options,
+			link,
 		})
-		console.log("model/messages.js createMessage Succesfully added new message to database".green)
-		console.log(result.ops[0]._id)
+		console.log(`model/messages.js createMessage Succesfully added new message to database ${result.ops[0]._id}`.green)
 	} catch (error) {
 		console.log("model/messages.js createMessage Error adding new message to database".red.bgCyan)
 		console.log(`${error}`.red)
@@ -28,10 +26,9 @@ const getMessage = async (messArr) => {
 			const result = await collection.findOne({ name: message })
 			messages[result.name] = {
 				description: result.description,
-				options: result.options
+				link: result.link
 			}
-			console.log(`model/messages.js getMessage Succesfully loaded '${message}' from database`.green)
-			console.log(result._id)
+			console.log(`model/messages.js getMessage Succesfully loaded '${message}' from database ${result._id}`.green)
 		}
 		return messages
 	} catch (error) {

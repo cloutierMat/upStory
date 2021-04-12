@@ -16,11 +16,7 @@ router.get('/', async (req, res) => {
 //
 // display list of crags
 router.get('/crags', (req, res) => {
-	res.redirect('/climb')
-})
-
-router.get('/climb', async (req, res) => {
-	res.send("we")
+	res.redirect('/api/climb')
 })
 
 module.exports = router

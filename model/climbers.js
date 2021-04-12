@@ -37,8 +37,7 @@ const getDetails = async (name) => {
 		const collection = await db.getCollection(climberCollection)
 		let result = await db.findOneByObj(collection, { name })
 		if (result === null) return invalidRequest(name)
-		console.log("model/climbers.js getDetails Succesfully loaded climber from database".green)
-		console.log(result)
+		console.log(`model/climbers.js getDetails Succesfully loaded climber from database ${result._id}`.green)
 		return result
 	} catch (error) {
 		console.log("model/climbers.js getDetails Failed to load climber from database".red.bgGray)
@@ -83,11 +82,3 @@ const climbers = {
 }
 
 module.exports = climbers
-
-
-async function testFunction() {
-	console.log(await createClimber("mat"))
-	console.log(await getShort('mat')
-	)
-}
-// testFunction()
