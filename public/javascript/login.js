@@ -12,6 +12,9 @@ const loadText = (key, dataObj) => {
 	return div
 }
 
+const loadClimber = (key, dataObj) => {
+
+}
 
 const loadLoginPage = (pageDataObject) => {
 	const textDiv = document.getElementById('textDiv')
@@ -21,7 +24,11 @@ const loadLoginPage = (pageDataObject) => {
 	const keyArray = Object.keys(pageDataObject)
 	for (key of keyArray) {
 		const dataObj = pageDataObject[key]
-		const text = loadText(key, dataObj)
+		let text = ""
+		if (key === 'climber')
+			text = loadClimber(key, dataObj)
+		else
+			text = loadText(key, dataObj)
 		textDiv.appendChild(text)
 	}
 }
@@ -38,18 +45,29 @@ const loginButtonsClick = (event) => {
 	event = event.target.textContent
 	console.log(`${event} button clicked`)
 	let answer = getUserPrompt()
-	if (event === 'login') {
-		fetch(`/api/climber/login/${answer}`)
-			.then((response) => response.json())
-			.then((dataObj) => console.log(dataObj))
-		//
-		// Need to deal with dataObj and introduce the climber to itself
-		//
-		return
+	switch (event) {
+		case "login":
+			fetch(`/api/climber/login/${answer}`)
+				.then((response) => response.json())
+				.then((dataObj) => {
+					if (dataObj.hasOwnProperty('error')) {
+						alert(dataObj.error)
+						return
+					}
+					if (dataObj.hasOwnProperty('invalidName')) {
+						alert(dataObj.invalidName.description)
+						return
+					}
+					loadLoginPage(dataObj)
+				})
+			break
+		case "create":
+			break
+		case "introduce":
+			break
+		default:
+			break
 	}
-	//
-	// Need to create path for the createClimber
-	//
 }
 
 const getUserPrompt = () => prompt("Enter Your climber's name")

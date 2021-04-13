@@ -4,7 +4,12 @@ require('colors')
 const climberCollection = "climbers"
 
 const notUnique = (name) => {
-	console.log(`model/climbers Invalid request --- name:${name} already exists ---`.red.bgGray)
+	console.log(`model/climbers Invalid request --- name:${name} already exists ---`.red)
+	return 400
+}
+
+const invalidRequest = (name) => {
+	console.log(`model/climbers Invalid request --- name:${name} doesn't exist ---`.red)
 	return 400
 }
 
@@ -35,11 +40,14 @@ const createClimber = async (name) => {
 const getDetails = async (name) => {
 	try {
 		const collection = await db.getCollection(climberCollection)
-		let result = await db.findOneByObj(collection, { name })
-		if (result === null) return invalidRequest(name)
+		const cursor = collection.find({ name })
+		const result = await cursor.toArray()
+		// let result = await db.findOneByObj(collection, { name })
+		if (result.length === 0) return invalidRequest(name)
 		console.log(`model/climbers.js getDetails Succesfully loaded climber from database ${result._id}`.green)
 		return result
 	} catch (error) {
+		console.log(error)
 		console.log("model/climbers.js getDetails Failed to load climber from database".red.bgGray)
 		console.log(`${error}`.red)
 		return 500
@@ -66,7 +74,8 @@ const getId = async (name) => {
 	try {
 		const climber = await getDetails(name)
 		if (Number.isNaN(climber)) return climber
-		return climber._id
+		console.log(climber[0]._id)
+		return climber[0]._id
 	} catch (error) {
 		console.log("model/climbers.js getId Failed to load climber from database".red.bgCyan)
 		console.log(`${error}`.red)

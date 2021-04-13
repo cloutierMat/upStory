@@ -36,14 +36,17 @@ router.post('/login', async (req, res) => {
 router.get('/login/:name', async (req, res) => {
 	const error = validate.validateName(req.params)
 	if (error) {
-		res.status(400).send(error)
+		res.status(400).send({ error: error.details.map(elem => elem.message) })
 		return
 	}
 	const name = req.params.name
 	const climber = await climbers.getDetails(name)
-	console.log(climber)
+	if (climber === 400) {
+		let mess = await messages.getMessage(['invalidName'])
+		res.status(400).send(mess)
+		return
+	}
 	let mess = await messages.getMessage(['introduce'])
-	console.log("in Climbers ", mess)
 	mess.climber = climber
 	res.send(mess)
 })
