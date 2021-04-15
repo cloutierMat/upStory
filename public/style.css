@@ -1,5 +1,18 @@
-h1{
-	padding-left: 2em;
+#header{
+	display: flex;
+}
+
+#header h1{
+flex: 15%;
+text-align: center;
+}
+
+#header img{
+	width: 200px;
+}
+
+#header div{
+	flex:35%
 }
 
 .container{
@@ -7,17 +20,23 @@ h1{
 }
 
 .textBox{
-	height: 10em;
+	height: auto;
 	width:  10em;
 	border: 2px black solid;
 	border-radius: 15%;
-	padding: 5px;
+	padding: 7px;
 	margin: 5px;
+	background-color: rgb(200, 177, 180);
 }
+
 #p5-window{
 	flex: 55%;
 }
+
 #textDiv{
+	background-image: url('./images/bugs.jpeg');
+	background-repeat: no-repeat;
+	background-size: cover;
 	background-color: lightslategray;
 	flex:45%;
 	display: flex;
@@ -27,5 +46,4 @@ h1{
 	text-align: center;
 	line-height: 1.5em;
 }
-
 

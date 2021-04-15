@@ -1,9 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const validate = require('./validate')
 
 const messages = require('../model/messages')
-const climbs = require('../model/climbs')
 
 
 //

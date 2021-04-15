@@ -1,5 +1,9 @@
 const prettify = (str) => str.split('\n').join('<br>').split("_").join(" ")
 
+const climberToString = (obj) => {
+	return prettify(`Your are ${obj.name}\nYou can climb up to 5.${obj.grade}\nAnd never forget that you are ${obj.status}`)
+}
+
 const createTextDiv = (str, docClass = "text") => {
 	const docObj = document.createElement('div')
 	docObj.innerHTML = prettify(str)
@@ -11,12 +15,10 @@ const createButton = (label, link) => {
 	const textObj = document.createElement('button')
 	textObj.textContent = prettify(label)
 
-	const anchor = document.createElement('a')
-	anchor.id = label
-	anchor.appendChild(textObj)
-	anchor.addEventListener('click', link)
+	textObj.id = label
+	textObj.addEventListener('click', link)
 
-	return anchor
+	return textObj
 }
 
 const createBox = () => {
@@ -26,7 +28,9 @@ const createBox = () => {
 }
 
 export default {
+	climberToString,
 	createTextDiv,
 	createButton,
-	createBox
+	createBox,
+	prettify
 }

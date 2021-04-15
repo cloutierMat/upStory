@@ -73,7 +73,7 @@ const createRoutes = async (crag, route) => {
 const getAllCrags = async () => {
 	try {
 		const collection = await db.getCollection(cragsCollection)
-		const cursor = collection.find({}, { projection: { name: 1, link: 1, _id: 0 } })
+		const cursor = collection.find({})
 		const result = await cursor.toArray()
 		console.log(`model/climbs.js getAllCrags Succesfully fetched all crags`.green)
 		return result
@@ -111,9 +111,14 @@ const getRouteId = async (name) => {
 	}
 }
 
+const getRouteInfo = (route, climber) => {
+	return { route, climber }
+}
+
 module.exports = {
 	getAllCrags,
 	getAllRoutes,
+	getRouteInfo,
 	createCrags,
 	createRoutes,
 	getRouteId

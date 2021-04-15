@@ -48,7 +48,7 @@ function draw() {
 			let temp = map(wave.y(x / width), -1, 1, 0, height)
 			y += temp
 			fill(wave.color(temp))
-			// circle(x,temp,graph.pointSize);      
+			// circle(x, temp, graph.pointSize)
 		})
 		circle(x, y / waves.length, graph.pointSize)
 		// vertex(x, y / waves.length);

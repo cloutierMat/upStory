@@ -42,10 +42,9 @@ const getDetails = async (name) => {
 		const collection = await db.getCollection(climberCollection)
 		const cursor = collection.find({ name })
 		const result = await cursor.toArray()
-		// let result = await db.findOneByObj(collection, { name })
 		if (result.length === 0) return invalidRequest(name)
 		console.log(`model/climbers.js getDetails Succesfully loaded climber from database ${result._id}`.green)
-		return result
+		return result[0]
 	} catch (error) {
 		console.log(error)
 		console.log("model/climbers.js getDetails Failed to load climber from database".red.bgGray)
@@ -74,8 +73,8 @@ const getId = async (name) => {
 	try {
 		const climber = await getDetails(name)
 		if (Number.isNaN(climber)) return climber
-		console.log(climber[0]._id)
-		return climber[0]._id
+		console.log(climber._id)
+		return climber._id
 	} catch (error) {
 		console.log("model/climbers.js getId Failed to load climber from database".red.bgCyan)
 		console.log(`${error}`.red)
