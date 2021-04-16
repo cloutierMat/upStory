@@ -102,4 +102,3 @@ export default {
 	vanClick,
 	setClimber
 }
-

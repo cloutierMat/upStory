@@ -111,7 +111,8 @@ const getRouteId = async (name) => {
 	}
 }
 
-const getRouteInfo = (route, climber) => {
+const getRouteInfo = async (route, climber) => {
+	const collection = await db.collection(routesCollection)
 	return { route, climber }
 }
 
