@@ -1,104 +1,195 @@
 import format from './formatOutput.js'
+import position from './position.js'
 
-const currentClimber = {}
+//
+// functions to create textBox on html
+const createVanElement = (pageDataObject) => {
+	const keys = Object.getOwnPropertyNames(pageDataObject)
+	console.log("createVanElement for:", keys)
 
-const createTextBox = (key, dataObj) => {
-	console.log(`loading text for ${key} box`)
-
-	const div = format.createBox()
-
-	const strDiv = format.createTextDiv(dataObj.description)
-	div.appendChild(strDiv)
-	const links = Object.getOwnPropertyNames(dataObj.link)
-	for (const link of links) {
-		const button = format.createButton(link, climbButtonsClick)
-		div.appendChild(button)
+	let contentArray = []
+	for (key of keys) {
+		const link = (Object.getOwnPropertyNames(pageDataObject[key].link))[0]
+		const content = {
+			title: key,
+			text: pageDataObject[key].description,
+			link: {
+				label: link,
+				eventCaller: climbButtonsClick
+			}
+		}
+		contentArray.push((content))
 	}
-
-	return div
+	format.updateTextDivContent(contentArray)
 }
 
-function loadTextDiv(pageDataObject, textDiv) {
-	const keyArray = Object.keys(pageDataObject)
-	for (key of keyArray) {
-		const dataObj = pageDataObject[key]
-		let text = ""
-		text = createTextBox(key, dataObj)
-		textDiv.appendChild(text)
+const createClimbElement = (pageDataArray) => {
+	console.log("createClimbElement:", pageDataArray)
 
-	}
+	const contentArray = pageDataArray.map(obj => {
+		return {
+			title: obj.name,
+			text: obj.description,
+			link: {
+				label: obj.name,
+				eventCaller: cragButtonClick
+			}
+		}
+	})
+	format.updateTextDivContent(contentArray)
 }
 
-const createClimbElement = (pageDataObject) => {
-	const textDiv = document.getElementById('textDiv')
+const createRouteElement = (pageDataArray) => {
+	console.log("CreateRouteElement:", pageDataArray)
 
-	while (textDiv.firstChild) {
-		textDiv.removeChild(textDiv.lastChild)
-	}
+	const contentArray = pageDataArray.map(obj => {
+		return {
+			title: obj.name,
+			text: `Grade: 5.${obj.grade}`,
+			link: {
+				label: obj.name,
+				eventCaller: routeButtonClick
+			}
+		}
+	})
+	format.updateTextDivContent(contentArray)
+}
 
-	if (Array.isArray(pageDataObject)) {
-		pageDataObject.forEach(obj => {
-			console.log({ [obj.name]: obj })
-			loadTextDiv({ [obj.name]: obj }, textDiv)
+const createAttemptElement = (pageDataObject) => {
+	console.log("createAttemptElement:", pageDataObject.name)
+
+	const contentArray = []
+
+	contentArray.push({
+		title: pageDataObject.name,
+		text: `Grade: 5.${pageDataObject.grade}\n${pageDataObject.description}`,
+		link: {
+			label: "Attempt",
+			eventCaller: attemptButtonClick
+		}
+	})
+
+	const attempt = pageDataObject.attempts.attempt
+	const success = pageDataObject.attempts.success
+		? "And you were succesful!"
+		: "And brilliantly failed everytime!"
+	contentArray.push({
+		title: position.climber().name,
+		text: `You tried that route\n${attempt} time${attempt > 1 ? "s" : ""}\n${success}`
+	})
+
+	format.updateTextDivContent(contentArray)
+}
+
+const createResultElement = (pageDataObject) => {
+
+	const returnToCrag = () => createRouteElement(position.allRoutes())
+	const retryRoute = () => attemptButtonClick({ target: { id: position.route().name } })
+
+	const contentArray = []
+
+	console.log("createResultElement success:", pageDataObject.success)
+	if (pageDataObject.success) {
+		const attempt = pageDataObject.attempt
+		contentArray.push({
+			title: "Congrats",
+			text: `You climbed it in ${attempt} ${attempt > 1 ? "tries" : "try"}!\nClick on the van to return to your van!`,
 		})
-	} else
-		loadTextDiv(pageDataObject, textDiv)
+	} else {
+		contentArray.push({
+			title: "You got crushed",
+			text: `Attempt #${pageDataObject.attempt} wasn't really fruitful.\nIf you believe you still have a chance at this route! You know what to do!`,
+			link: {
+				label: "Try Again",
+				eventCaller: retryRoute
+			}
+		})
+	}
+	const cragObj = position.crag()
+	contentArray.push({
+		title: "See more routes",
+		text: "Browse different routes at that crag!",
+		link: {
+			label: cragObj.name,
+			eventCaller: returnToCrag
+		}
+	})
+	format.updateTextDivContent(contentArray)
 }
 
-const createRouteElement = (dataObj) => {
-	const textDiv = document.getElementById('textDiv')
-
-	while (textDiv.firstChild) {
-		textDiv.removeChild(textDiv.lastChild)
-	}
-
-	for (const route of dataObj) {
-		const text = `${route.name}\nGrade: ${route.grade}`
-		const routeDiv = format.createTextDiv(text, 'textBox')
-		const button = format.createButton(route.name)
-		button.addEventListener('click', routeButtonClick)
-		routeDiv.appendChild(button)
-		textDiv.appendChild(routeDiv)
-	}
-}
-
+//
+// Event Listener
 const vanClick = () => {
 	fetch('/api/van')
 		.then((response) => response.json())
 		.then((vanObject) => {
-			createClimbElement(vanObject)
+			createVanElement(vanObject)
 		})
-}
-
-const setClimber = (climber) => {
-	currentClimber.climber = climber
 }
 
 const climbButtonsClick = (event) => {
 	event = event.target.id
 	console.log(`${event} button clicked`)
-	switch (event) {
-		case "crags":
-			fetch('/api/climb')
-				.then((response) => response.json())
-				.then((dataObj) => {
-					createClimbElement(dataObj)
-				})
-			break
+	fetch('/api/climb')
+		.then((response) => response.json())
+		.then((dataObj) => {
+			position.allCrags(dataObj)
+			createClimbElement(dataObj)
+		})
+}
 
-		default:
-			fetch(`/api/climb/${event}`)
-				.then(response => response.json())
-				.then(dataObj => createRouteElement(dataObj))
-			break
+const cragButtonClick = (event) => {
+	event = event.target.id
+	console.log(`${event} button clicked`)
+	fetch(`/api/climb/${event}`)
+		.then((response) => response.json())
+		.then((dataObj) => {
+			console.log("climbButtonClick position.crag:", event)
+			position.crag(event)
+			position.allRoutes(dataObj)
+			createRouteElement(dataObj)
+		})
+}
+
+const routeButtonClick = async (event) => {
+	event = event.target.id
+	try {
+		console.log("clicked route button", event)
+		const response = await fetch(`/api/climb/${position.crag().name}/${event}?climber=${position.climber().name}`)
+		const routeObj = await response.json()
+		console.log("routeButtonClick position.route:", event)
+		position.route(routeObj)
+		createAttemptElement(routeObj)
+	} catch (error) {
+		console.log("routeButtonClick Error")
+		console.log(error)
 	}
 }
 
-const routeButtonClick = (event) => {
-	console.log(event.target)
+const attemptButtonClick = async (event) => {
+	event = event.target.id
+	console.log("button clicked", event)
+
+	try {
+		let postOptions = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ climber: position.climber().name })
+		}
+		const crag = position.crag().name
+		const route = position.route().name
+		const response = await fetch(`/api/climb/${crag}/${route}/attempt`, postOptions)
+		const attemptObj = await response.json()
+		createResultElement(attemptObj)
+
+	} catch (error) {
+		console.log("error in attemptButtonClick")
+		console.log(error)
+	}
 }
 
 export default {
 	vanClick,
-	setClimber
 }

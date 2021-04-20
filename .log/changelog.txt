@@ -1,0 +1,5 @@
+route fetch  ==> 	public/climb new fetch to return routes info and climbers attempts
+routes/climb new endpoint get /api/climb/:crag/:route {climber:{name}}
+	returns route description and climbers attempts and succes on specific route
+
+deal with route dificulty

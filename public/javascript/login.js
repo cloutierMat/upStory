@@ -1,51 +1,50 @@
 import format from './formatOutput.js'
 import climb from './climb.js'
+import position from './position.js'
 
 
 const getUserPrompt = () => prompt("Enter Your climber's name")
 
-const createTextBox = (key, dataObj) => {
-	console.log(`loading text at ${key} page`)
-
-	const div = format.createBox()
-
-	const strDiv = format.createTextDiv(dataObj.description)
-	div.appendChild(strDiv)
-	const links = Object.getOwnPropertyNames(dataObj.link)
-	for (const link of links) {
-		const button = format.createButton(link, loginButtonsClick)
-		div.appendChild(button)
-	}
-
-	return div
-}
-
-const createClimberBox = (climberObj) =>
-	createTextBox(climberObj.name, {
-		description: format.climberToString(climberObj),
-		link: {}
-	})
-
-
+//
+// functions to create textBox on html
 const createPageElements = (pageDataObject) => {
-	const textDiv = document.getElementById('textDiv')
-
-	while (textDiv.firstChild) {
-		textDiv.removeChild(textDiv.lastChild)
+	const keys = Object.getOwnPropertyNames(pageDataObject)
+	console.log("createPageElement for keys:", keys)
+	const contentArray = []
+	for (key of keys) {
+		let content = {}
+		if (key === "climber") {
+			const climber = pageDataObject[key]
+			content = {
+				title: climber.name,
+				text: `You can climb <strong>5.${climber.grade}</strong>\nNever forget that you are <strong>${climber.status}</strong>`
+			}
+		} else {
+			const link = (Object.getOwnPropertyNames(pageDataObject[key].link))[0]
+			content = {
+				title: key,
+				text: pageDataObject[key].description,
+				link: {
+					label: link,
+					eventCaller: loginButtonsClick
+				}
+			}
+		}
+		contentArray.push(content)
 	}
-
-	const keyArray = Object.keys(pageDataObject)
-	for (key of keyArray) {
-		const dataObj = pageDataObject[key]
-		let text = ""
-		if (key === 'climber')
-			text = createClimberBox(dataObj)
-		else
-			text = createTextBox(key, dataObj)
-		textDiv.appendChild(text)
-	}
+	format.updateTextDivContent(contentArray)
 }
 
+const createSuccesfulLogin = (dataObj) => {
+	createPageElements(dataObj)
+	createVanButton()
+	const climber = dataObj.climber.name
+	console.log("createSuccesfulLogin position.climber:", climber)
+	position.climber(dataObj.climber)
+}
+
+//
+// Function to create images and logos
 const createVanButton = () => {
 	let vanLogo = document.getElementById('vanLogo')
 	vanLogo.src = '../images/van.jpg'
@@ -53,50 +52,9 @@ const createVanButton = () => {
 	vanLogo.addEventListener('click', loginButtonsClick)
 }
 
-const loadSuccessfulLogin = (dataObj) => {
-	createPageElements(dataObj)
-	createVanButton()
-	climb.setClimber(dataObj.climber.name)
-}
-
-const startButtonClick = () => {
-	fetch('/api/climber/login')
-		.then((response) => response.json())
-		.then((pageData) => {
-			createPageElements(pageData)
-		})
-}
-
-const loginButtonsClick = (event) => {
-	event = event.target.id
-	console.log(`${event} button clicked`)
-	let answer = ""
-	switch (event) {
-		case "login":
-			answer = getUserPrompt()
-			login(answer)
-			break
-		case "create":
-			answer = getUserPrompt()
-			postNewClimber(answer)
-			break
-		case "van":
-		case "vanLogo":
-			climb.vanClick()
-			break
-		default:
-			break
-	}
-}
-
-
-export default {
-	startButtonClick
-}
-
-
+//
+// Functions to interact with server's API
 const postNewClimber = (name) => {
-
 	let postOptions = {
 		method: 'POST',
 		headers: {
@@ -111,11 +69,11 @@ const postNewClimber = (name) => {
 				alert("That Name is already taken!!!")
 				return
 			}
-			login(name)
+			getLogin(name)
 		})
 }
 
-const login = (name) => {
+const getLogin = (name) => {
 	fetch(`/api/climber/login/${name}`)
 		.then((response) => response.json())
 		.then((dataObj) => {
@@ -127,6 +85,43 @@ const login = (name) => {
 				alert(dataObj.invalidName.description)
 				return
 			}
-			loadSuccessfulLogin(dataObj)
+			createSuccesfulLogin(dataObj)
 		})
+}
+
+//
+// Event listeners
+const loginButtonsClick = (event) => {
+	event = event.target.id
+	console.log(`${event} button clicked`)
+	let answer = ""
+	switch (event) {
+		case "login":
+			answer = getUserPrompt()
+			getLogin(answer)
+			break
+		case "create":
+			answer = getUserPrompt()
+			postNewClimber(answer)
+			break
+		case "van":
+		case "vanLogo":
+			climb.vanClick()
+			break
+		default:
+			break
+	}
+}
+
+const startButtonClick = () => {
+	console.log("Start button clicked")
+	fetch('/api/climber/login')
+		.then((response) => response.json())
+		.then((pageData) => {
+			createPageElements(pageData)
+		})
+}
+
+export default {
+	startButtonClick
 }

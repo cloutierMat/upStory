@@ -1,9 +1,5 @@
 const prettify = (str) => str.split('\n').join('<br>').split("_").join(" ")
 
-const climberToString = (obj) => {
-	return prettify(`Your are ${obj.name}\nYou can climb up to 5.${obj.grade}\nAnd never forget that you are ${obj.status}`)
-}
-
 const createTextDiv = (str, docClass = "text") => {
 	const docObj = document.createElement('div')
 	docObj.innerHTML = prettify(str)
@@ -11,12 +7,12 @@ const createTextDiv = (str, docClass = "text") => {
 	return docObj
 }
 
-const createButton = (label, link) => {
+const createButton = (label, eventCaller) => {
 	const textObj = document.createElement('button')
 	textObj.textContent = prettify(label)
 
 	textObj.id = label
-	textObj.addEventListener('click', link)
+	textObj.addEventListener('click', eventCaller)
 
 	return textObj
 }
@@ -27,10 +23,46 @@ const createBox = () => {
 	return div
 }
 
+const killTextDivChild = () => {
+	const textDiv = document.getElementById("textDiv")
+	while (textDiv.firstChild) {
+		textDiv.removeChild(textDiv.lastChild)
+	}
+}
+
+
+const createTextBox = (content) => {
+	const div = createBox()
+	let text = `<strong>${content.title}</strong>\n`
+	text += content.text
+	div.innerHTML = prettify(text) + "<br>"
+	if (content.link) {
+		const button = createButton(content.link.label, content.link.eventCaller)
+		div.appendChild(button)
+	}
+	return div
+}
+
+/**
+ * Delete content from current textDiv and load new textBoxes
+ * @param {Array} contentArray Array of objects with content to create textBox
+ *
+ * content.title: string
+ * 
+ * content.text: string
+ * 
+ * content.link: {label: string, eventCaller:callback} (optional)
+*/
+const updateTextDivContent = (contentArray) => {
+	killTextDivChild()
+	const textDiv = document.getElementById("textDiv")
+	contentArray.forEach(content => textDiv.appendChild(createTextBox(content)))
+}
+
 export default {
-	climberToString,
+	prettify,
+	updateTextDivContent,
 	createTextDiv,
-	createButton,
 	createBox,
-	prettify
+	createButton,
 }

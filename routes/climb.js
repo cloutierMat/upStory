@@ -23,17 +23,19 @@ router.get('/:crag', async (req, res) => {
 })
 
 //
-// get the route description
+// get the route description and attempts
 router.get('/:crag/:route', async (req, res) => {
-	let mess = await climbs.getRouteInfo(req.params.route, req.body.climber)
+	const climber = req.query.climber
+	const route = req.params.route
+	const mess = await climbs.getRouteInfo(route)
+	mess.attempts = await attempts.getOneByClimber(route, climber)
 	res.send(mess)
 })
 
 //
 // get route list for the crag
-router.post('/:crag/:route', async (req, res) => {
+router.post('/:crag/:route/attempt', async (req, res) => {
 	const route = req.params.route
-
 	const climber = req.body.climber
 	let mess = await attempts.logAttempts(climber, route)
 	res.send(mess)

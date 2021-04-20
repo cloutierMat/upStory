@@ -111,10 +111,23 @@ const getRouteId = async (name) => {
 	}
 }
 
-const getRouteInfo = async (route, climber) => {
-	const collection = await db.collection(routesCollection)
+const getRouteInfo = async (route, projection) => {
+	if (!projection) projection = { name: 1, grade: 1, description: 1, _id: 0 }
+	try {
+		const collection = await db.getCollection(routesCollection)
+		const routeInfo = await collection.findOne({ name: route }, projection)
+		console.log(`model/climbs.js getRouteInfo Succesfully fetched ${route}'s information`.green)
+		console.log(routeInfo)
+		return routeInfo
+	} catch (error) {
+		console.log(`model/climbs.js getRouteInfo Error fetching ${route} info from the database`.red.bgGray)
+		console.log(`${error}`.red)
+	}
+
+
 	return { route, climber }
 }
+
 
 module.exports = {
 	getAllCrags,

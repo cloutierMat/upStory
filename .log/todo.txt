@@ -1,0 +1,14 @@
+
+clean up html to dry the code
+
+prevent logging attempts if success was previously achieved
+
+add message log to model/climbs routes
+
+message log model/climbers.js getDetails Succesfully loaded climber from database undefined
+
+load info in database ???? good job me for being so explicit. I totally know what I meant!!!
+
+trycatch all routes with server error
+
+climber will need to get better with successes

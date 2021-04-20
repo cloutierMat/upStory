@@ -4,24 +4,39 @@ const climbs = require('./climbs')
 
 const attemptsCollection = "attempts"
 
-const isSuccess = () => Math.floor(Math.random() * 2)
+const getRandomSuccess = (climberGrade, routeDifficulty) => {
+	const randomNumber = () => Math.random()
+	let userModifier = randomNumber() * 2 - 1 // will return a float with range -1 to 1
+	let environmentalModifier = randomNumber() * 4 - 2 // will return a float with range -2 to 2
+
+	console.log(`climberGrade: ${climberGrade}, routeDifficulty: ${routeDifficulty}`)
+	if (climberGrade >= routeDifficulty + userModifier + environmentalModifier)
+		return true
+	else
+		return false
+
+}
 
 const logAttempts = async (climber, route) => {
 	try {
-		const routeId = await climbs.getRouteId(route)
-		const climberId = await climbers.getId(climber)
+		route = await climbs.getRouteInfo(route, {})
+		climber = await climbers.getDetails(climber)
+		console.log("route: ")
+		console.log(route)
+		console.log("climber")
+		console.log(climber)
 		const attempts = await db.getCollection(attemptsCollection)
-		const success = !!isSuccess()
+		const success = getRandomSuccess(climber.grade, route.grade)
 		const result = await attempts.insertOne({
-			forRoutes: routeId,
-			forClimber: climberId,
+			forRoutes: route._id,
+			forClimber: climber._id,
 			timestamp: new Date(),
 			success
 		})
-		console.log(`model/attempts.js logAttempts Succesfully logged '${climber}'s' attempt to climb '${route}' result:${result.ops[0]._id}'`.green)
-		return result.ops[0]
+		console.log(`model/attempts.js logAttempts Succesfully logged '${climber.name}'s' attempt to climb '${route.name}' result:${result.ops[0]._id}'`.green)
+		return await getOneByClimber(route.name, climber.name)
 	} catch (error) {
-		console.log(`model/attempts.js logAttempts Error logging '${climber}'s' attempt at '${route}'`.red.bgGray)
+		console.log(`model/attempts.js logAttempts Error logging '${climber.name}'s' attempt at '${route.name}'`.red.bgGray)
 		console.log(`${error}`.red)
 		return 500
 	}

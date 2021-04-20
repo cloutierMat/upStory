@@ -1,3 +1,7 @@
+body{
+	background-color: black;
+}
+
 #header{
 	display: flex;
 }
@@ -5,6 +9,7 @@
 #header h1{
 flex: 15%;
 text-align: center;
+color: crimson;
 }
 
 #header img{
