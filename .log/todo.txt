@@ -1,14 +1,19 @@
+front end:
+	clean up html to dry the code
 
-clean up html to dry the code
 
-prevent logging attempts if success was previously achieved
+back end:
+	prevent logging attempts if success was previously achieved
+		front end need to show this change
 
-add message log to model/climbs routes
+	add message log to model/climbs routes
 
-message log model/climbers.js getDetails Succesfully loaded climber from database undefined
+	fix message message log model/climbers.js getDetails Succesfully loaded climber from database undefined
 
-load info in database ???? good job me for being so explicit. I totally know what I meant!!!
+	trycatch all routes with server error
 
-trycatch all routes with server error
+	climber will need to get better with successes
 
-climber will need to get better with successes
+database:
+	load crags and routes info in database
+
