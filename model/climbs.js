@@ -12,21 +12,17 @@ const notUnique = (name) => {
 //
 // Load a new crag in the database
 const createCrags = async (name, description) => {
-	const text = description.text
-	const approach = description.approach
-	const link = `climb/:${name}`
+	const link = { [name]: `get api/climb/:${name}` }
 	try {
 		const collection = await db.getCollection(cragsCollection)
 		const isCragExist = await db.findOneByObj(collection, { name })
 		if (isCragExist !== null) return notUnique(name)
 		const result = await db.insertOne(collection, {
 			name,
-			text,
-			approach,
+			description,
 			link
 		})
-		console.log("model/climbs.js createCrags Succesfully added new crag to database".green)
-		console.log(result.ops)
+		console.log(`model/climbs.js createCrags Succesfully added ${name} to database`.green)
 		return result.ops
 	} catch (error) {
 		console.log("model/climbs.js createClimbs Error adding new crag to database".red.bgGray)
@@ -41,7 +37,9 @@ const createRoutes = async (crag, route) => {
 	const name = route.name
 	const grade = route.grade
 	const description = route.description
-	const link = `climb/${crag}/${name}`
+	const link = {
+		[name]: `get api/climb/${crag}/${name}`
+	}
 
 	try {
 		const crags = await db.getCollection(cragsCollection)

@@ -1,12 +1,5 @@
 const prettify = (str) => str.split('\n').join('<br>').split("_").join(" ")
 
-const createTextDiv = (str, docClass = "text") => {
-	const docObj = document.createElement('div')
-	docObj.innerHTML = prettify(str)
-	docObj.classList.add(docClass)
-	return docObj
-}
-
 const createButton = (label, eventCaller) => {
 	const textObj = document.createElement('button')
 	textObj.textContent = prettify(label)
@@ -23,10 +16,9 @@ const createBox = () => {
 	return div
 }
 
-const killTextDivChild = () => {
-	const textDiv = document.getElementById("textDiv")
-	while (textDiv.firstChild) {
-		textDiv.removeChild(textDiv.lastChild)
+const killDivChild = (divToClean) => {
+	while (divToClean.firstChild) {
+		divToClean.removeChild(divToClean.lastChild)
 	}
 }
 
@@ -47,22 +39,19 @@ const createTextBox = (content) => {
  * Delete content from current textDiv and load new textBoxes
  * @param {Array} contentArray Array of objects with content to create textBox
  *
- * content.title: string
+ * .title: string
  * 
- * content.text: string
+ * .text: string
  * 
- * content.link: {label: string, eventCaller:callback} (optional)
+ * .link: {label: string, eventCaller:callback} (optional)
 */
 const updateTextDivContent = (contentArray) => {
-	killTextDivChild()
 	const textDiv = document.getElementById("textDiv")
+	killDivChild(textDiv)
 	contentArray.forEach(content => textDiv.appendChild(createTextBox(content)))
 }
 
 export default {
 	prettify,
 	updateTextDivContent,
-	createTextDiv,
-	createBox,
-	createButton,
 }

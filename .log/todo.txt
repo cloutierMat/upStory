@@ -3,8 +3,6 @@ front end:
 
 
 back end:
-	prevent logging attempts if success was previously achieved
-		front end need to show this change
 
 	add message log to model/climbs routes
 

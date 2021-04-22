@@ -32,6 +32,17 @@ color: crimson;
 	padding: 7px;
 	margin: 5px;
 	background-color: rgb(200, 177, 180);
+	animation: fadeIn 1150ms;
+}
+
+#vanLogo{
+	animation: fadeIn 1150ms;
+}
+
+@keyframes fadeIn{
+	0%{opacity: 0;}
+	80%{opacity: 0;}
+	100%{opacity: 1;}
 }
 
 #p5-window{

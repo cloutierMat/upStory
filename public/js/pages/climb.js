@@ -1,5 +1,5 @@
-import format from './formatOutput.js'
-import position from './position.js'
+import format from '../components/pageElements.js'
+import position from '../components/position.js'
 
 //
 // functions to create textBox on html
@@ -57,25 +57,28 @@ const createRouteElement = (pageDataArray) => {
 
 const createAttemptElement = (pageDataObject) => {
 	console.log("createAttemptElement:", pageDataObject.name)
+	const attempt = pageDataObject.attempts.attempt
+	const success = pageDataObject.attempts.success
 
 	const contentArray = []
 
 	contentArray.push({
 		title: pageDataObject.name,
 		text: `Grade: 5.${pageDataObject.grade}\n${pageDataObject.description}`,
-		link: {
-			label: "Attempt",
-			eventCaller: attemptButtonClick
-		}
+		link: !success
+			? {
+				label: "Attempt",
+				eventCaller: attemptButtonClick
+			}
+			: null
 	})
 
-	const attempt = pageDataObject.attempts.attempt
-	const success = pageDataObject.attempts.success
+	const succesStr = success
 		? "And you were succesful!"
 		: "And brilliantly failed everytime!"
 	contentArray.push({
 		title: position.climber().name,
-		text: `You tried that route\n${attempt} time${attempt > 1 ? "s" : ""}\n${success}`
+		text: `You tried that route\n${attempt} time${attempt > 1 ? "s" : ""}\n${succesStr}`
 	})
 
 	format.updateTextDivContent(contentArray)

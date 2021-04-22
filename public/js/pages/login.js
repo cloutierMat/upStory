@@ -1,6 +1,6 @@
-import format from './formatOutput.js'
+import format from '../components/pageElements.js'
 import climb from './climb.js'
-import position from './position.js'
+import position from '../components/position.js'
 
 
 const getUserPrompt = () => prompt("Enter Your climber's name")
@@ -46,10 +46,12 @@ const createSuccesfulLogin = (dataObj) => {
 //
 // Function to create images and logos
 const createVanButton = () => {
-	let vanLogo = document.getElementById('vanLogo')
-	vanLogo.src = '../images/van.jpg'
-	vanLogo.id = 'vanLogo'
-	vanLogo.addEventListener('click', loginButtonsClick)
+	const vanLogo = document.getElementById('vanLogoDiv')
+	const vanImg = document.createElement('img')
+	vanImg.src = '../images/van.jpg'
+	vanImg.id = 'vanLogo'
+	vanImg.addEventListener('click', loginButtonsClick)
+	vanLogo.appendChild(vanImg)
 }
 
 //

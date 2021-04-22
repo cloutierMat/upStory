@@ -1,5 +1,5 @@
 import login from './login.js'
-import format from './formatOutput.js'
+import format from '../components/pageElements.js'
 
 //
 // functions to create textBox on html
