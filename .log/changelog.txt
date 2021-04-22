@@ -1,3 +1,5 @@
-public/climb It is now impossible to attempt a route he already climbed!
+	fixed issue that made it imposible to climb!
 
-Added animation delay to my TextBox and vanlog. It now matches the squigley animation
+	database:
+	load crags and routes info in database
+

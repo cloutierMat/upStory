@@ -1,6 +1,13 @@
 front end:
 	clean up html to dry the code
 
+	display proper message when attempting a route for the first time
+
+	display proper error message when attemting to create a new user with an invalid name
+
+	display return to crag on route attempt page
+
+	display route and climber info on on attempt and result page
 
 back end:
 
@@ -13,5 +20,5 @@ back end:
 	climber will need to get better with successes
 
 database:
-	load crags and routes info in database
+	load messages in database
 
