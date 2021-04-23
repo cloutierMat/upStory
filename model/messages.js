@@ -3,9 +3,14 @@ require('colors')
 
 const messCollection = "messages"
 
-const createMessage = async (name, description, link = null) => {
+const createMessage = async (name, description, link = []) => {
 	try {
 		const collection = await db.getCollection(messCollection)
+		const isMessageExist = await db.findOneByObj(collection, { name })
+		if (isMessageExist) {
+			console.log(`model/messages Invalid request --- message:${name} already exists ---`.red.bgGray)
+			return 400
+		}
 		const result = await collection.insertOne({
 			name,
 			description,

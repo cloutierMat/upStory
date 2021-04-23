@@ -4,10 +4,10 @@ body{
 
 #header{
 	display: flex;
+	width: 100%;
 }
 
-#header h1{
-flex: 15%;
+h1{
 text-align: center;
 color: crimson;
 }
@@ -16,12 +16,13 @@ color: crimson;
 	width: 200px;
 }
 
-#header div{
-	flex:35%
+.split{
+	flex:50%
 }
 
 .container{
 	display:flex;
+	width: 100%;
 }
 
 .textBox{
@@ -36,6 +37,8 @@ color: crimson;
 }
 
 #vanLogo{
+	float:center;
+	/* padding-left: 233px; */
 	animation: fadeIn 1150ms;
 }
 
@@ -45,16 +48,11 @@ color: crimson;
 	100%{opacity: 1;}
 }
 
-#p5-window{
-	flex: 55%;
-}
-
 #textDiv{
 	background-image: url('./images/bugs.jpeg');
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-color: lightslategray;
-	flex:45%;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -63,3 +61,8 @@ color: crimson;
 	line-height: 1.5em;
 }
 
+button{
+	background-color: coral;
+	border-radius: 20px;
+	padding: 5px;
+}

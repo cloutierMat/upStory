@@ -1,5 +1,0 @@
-	fixed issue that made it imposible to climb!
-
-	database:
-	load crags and routes info in database
-
