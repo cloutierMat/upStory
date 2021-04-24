@@ -5,7 +5,7 @@ front end:
 
 	display proper error message when attemting to create a new user with an invalid name
 
-	display return to crag on route attempt page
+	display return to crag on attempt page
 
 	display route and climber info on on attempt and result page
 
@@ -17,8 +17,19 @@ back end:
 
 	trycatch all routes with server error
 
-	climber will need to get better with successes
+	transfer all db related function to db.js
 
 database:
+	
 	load messages in database
+
+	transform loadDb to interact with a json file instead of a multitude of function call
+
+new feature:
+	
+	climber will need to get better with successes
+
+	create a store
+
+	create a tavern
 
