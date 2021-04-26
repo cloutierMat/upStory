@@ -9,7 +9,6 @@ Enjoy your exploration of some of the Canadian Rockies climb.
 - express
 - joi
 - mongodb
-- nodemon (to run in live environement)
 
 It is important to have a mongodb running locally and listening to port 27017
 
@@ -21,9 +20,6 @@ git clone https://github.com/cloutierMat/upStory.git
 cd upStory
 npm install
 npm run loadDb
-```
-To run in node
-```bash
 npm start
 ```
 
