@@ -3,7 +3,7 @@ const messages = require('../model/messages')
 
 async function loadUp() {
 	await messages.createMessage("greet",
-		"Welcome to UpStory.\n==>Careful, falling hazard!!\nTo begin and progres your story, follow along",
+		"Welcome to UpStory.\n==>Careful, falling hazard!!\nTo begin and progress your story, follow along",
 		{
 			"start": "get /api/climber/login"
 		}
@@ -21,7 +21,7 @@ async function loadUp() {
 		}
 	)
 	await messages.createMessage("introduce",
-		"Let me introduce you to yourself\n\t\t\t\"When you are done admiring your own self protrait, follow the rest to get to your climber\"s van\"\n\t\t\t\"==> Remember where it is. You can always come back to it when you need a rest\"",
+		"Let me introduce you to yourself\nWhen you are done admiring your own self protrait, go to your van.\nYou can always get back to your van by clicking the logo above the climber's animation!",
 		{
 			"van": "get api/van {climber:{id}}"
 		}
